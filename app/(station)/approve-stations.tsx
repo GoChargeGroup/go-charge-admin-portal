@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { approveStation, getUnapprovedStations } from '@/lib/adminService';
+import { approveStation, denyStation, getUnapprovedStations } from '@/lib/adminService';
 import Station from "@/components/Station";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -34,6 +34,15 @@ const ApproveStations = () => {
             Alert.alert("Unable to approve station");
         }
     };
+    const handleDenyStation = async (station_id) => {
+        try {
+            await denyStation(station_id);
+            await loadUnapprovedStations();
+        } catch (err) {
+            Alert.alert("Unable to deny station");
+        }
+    };
+
 
     const renderOperationalHours = (hours) => {
         const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -112,9 +121,9 @@ const ApproveStations = () => {
                                             color="#4caf50"
                                         />
                                         <Button
+                                            onPress={()=>handleDenyStation(station._id)}
                                             title="Deny"
                                             color="#e57373"
-                                            disabled={true}
                                         />
                                     </View>
                                 </View>
